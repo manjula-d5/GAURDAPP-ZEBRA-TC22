@@ -1,0 +1,13 @@
+# Copy this file to local.properties and fill in values — never commit local.properties
+
+# Android SDK path (required)
+sdk.dir=C\:\\Users\\YourUser\\AppData\\Local\\Android\\Sdk
+
+# Backend URL for debug builds (emulator: use 10.0.2.2; real device: LAN IP)
+storelense.debug.url=http://10.0.2.2:8080/
+
+# Backend URL for release builds
+storelense.release.url=https://api.storelense.internal/
+
+# Set to false when running on a real BT reader device
+storelense.use.mock.rfid=true
