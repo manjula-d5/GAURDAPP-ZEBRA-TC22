@@ -431,7 +431,8 @@ private fun NoBillView(
         )
         Spacer(Modifier.height(6.dp))
         Text(
-            "Scan barcode or type bill reference below",
+            if (manualEntryEnabled) "Can't scan? Enter the bill number or select a bill below."
+            else "Scan the bill barcode or select a bill below.",
             fontSize = 14.sp, color = SubText, textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(28.dp))
@@ -507,7 +508,7 @@ private fun NoBillView(
 
         if (pendingBills.isNotEmpty()) {
             Spacer(Modifier.height(28.dp))
-            PendingBillsSection(pendingBills)
+            PendingBillsSection(pendingBills, onBillSelected = onQrScanned)
         }
     }
 }
@@ -515,13 +516,16 @@ private fun NoBillView(
 // ── Store-wide unchecked bills ────────────────────────────────────────────────
 
 @Composable
-private fun PendingBillsSection(pendingBills: List<BillSummaryDto>) {
+private fun PendingBillsSection(
+    pendingBills: List<BillSummaryDto>,
+    onBillSelected: (String) -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.ReportProblem, null, Modifier.size(16.dp), tint = Color(0xFFDC2626))
             Spacer(Modifier.width(6.dp))
             Text(
-                "Unbilled bills in store (not yet checked at gate)",
+                "Pending bills - tap to select",
                 fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFFDC2626)
             )
         }
@@ -529,7 +533,7 @@ private fun PendingBillsSection(pendingBills: List<BillSummaryDto>) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             pendingBills.forEach { bill ->
                 Card(
-                    modifier  = Modifier.fillMaxWidth(),
+                    modifier  = Modifier.fillMaxWidth().clickable { onBillSelected(bill.billRef) },
                     colors    = CardDefaults.cardColors(containerColor = SurfaceWhite),
                     shape     = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(1.dp)
@@ -669,7 +673,7 @@ private fun ReleasedView(
             }
             if (checkByEye.isNotEmpty()) {
                 ResultSectionHeader(
-                    "Check by Eye (No RFID)", checkByEye.size,
+                    "Manual Check (No RFID)", checkByEye.size,
                     Color(0xFF2563EB), Icons.Default.Visibility
                 )
                 checkByEye.forEach { line -> BillLineCard(line) }
@@ -1006,7 +1010,7 @@ private fun BillStatsCard(
         ) {
             BillStat("Total Items", totalItems, DarkText)
             BillStat("Auto Check", autoCheck, TealPrimary, onClick = onAutoCheckClick)
-            BillStat("Check by Eye", checkByEye, OrangeExtra, onClick = onManualCheckClick)
+            BillStat("Manual Check", checkByEye, OrangeExtra, onClick = onManualCheckClick)
         }
     }
 }

@@ -13,7 +13,7 @@ class AuthRepository @Inject constructor(
     private val storeConfigRepo:     StoreConfigRepository
 ) {
     suspend fun login(username: String, password: String): Result<Unit> = try {
-        val resp = api.login(LoginRequest(username, password))
+        val resp = api.login(LoginRequest(username.trim(), password))
         val body = resp.body()
         if (resp.isSuccessful && body?.success == true) {
             val data = body.data!!
