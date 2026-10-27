@@ -53,7 +53,7 @@ class ReaderSettingsRepository @Inject constructor(
     private fun loadFromPrefs() = ReaderSettings(
         bluetoothAddress = prefs.getString(KEY_ADDRESS,  null),
         bluetoothName    = prefs.getString(KEY_NAME,     null),
-        txPowerDbm       = prefs.getInt(KEY_TX_POWER,    20)
+        txPowerDbm       = prefs.getInt(KEY_TX_POWER,    5)
     )
 
     companion object {
